@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlaySong extends AppCompatActivity {
@@ -24,12 +28,10 @@ public class PlaySong extends AppCompatActivity {
         mediaPlayer.release();
         updateSeek.interrupt();
     }
-
     TextView textView, timerTextView;
-    ImageView play, previous, next;
+    ImageView play, previous, next, albumArt;
     ArrayList<File> songs;
     MediaPlayer mediaPlayer;
-
     String textContent;
     int position;
     SeekBar seekBar;
@@ -46,6 +48,7 @@ public class PlaySong extends AppCompatActivity {
         next = findViewById(R.id.next);
         seekBar = findViewById(R.id.seekBar);
         timerTextView = findViewById(R.id.timerTextView);
+        albumArt = findViewById(R.id.albumArt);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -140,6 +143,24 @@ public class PlaySong extends AppCompatActivity {
                 textView.setText(textContent);
 
 
+
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(getApplicationContext(), uri);
+                byte[] art = retriever.getEmbeddedPicture();
+                if (art != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
+                    albumArt.setImageBitmap(bitmap);
+                } else {
+                    // If no album art found, you can set a default image
+                    albumArt.setImageResource(R.drawable.dafault_album_art);
+                }
+                try {
+                    retriever.release();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+
                 updateSeek = new Thread(){
                     @Override
                     public void run() {
@@ -194,7 +215,46 @@ public class PlaySong extends AppCompatActivity {
                     }
                 };
                 updateSeek.start();
+
+
+
+
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(getApplicationContext(), uri);
+                byte[] art = retriever.getEmbeddedPicture();
+                if (art != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
+                    albumArt.setImageBitmap(bitmap);
+                } else {
+                    // If no album art found, you can set a default image
+                    albumArt.setImageResource(R.drawable.dafault_album_art);
+                }
+                try {
+                    retriever.release();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
+
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(getApplicationContext(), uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        if (art != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
+            albumArt.setImageBitmap(bitmap);
+        } else {
+            // If no album art found, you can set a default image
+            albumArt.setImageResource(R.drawable.dafault_album_art);
+        }
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
     }
 }

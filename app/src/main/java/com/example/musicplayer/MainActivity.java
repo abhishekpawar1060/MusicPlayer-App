@@ -1,6 +1,4 @@
 package com.example.musicplayer;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -24,12 +22,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
     ListView listView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -45,12 +40,9 @@ public class MainActivity extends AppCompatActivity {
                         String[] items = new String[mySongs.size()];
                         for (int i = 0; i < mySongs.size(); i++) {
                             items[i] = mySongs.get(i).getName().replace(".mp3","");
-
                         }
-
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_expandable_list_item_1,items);
                         listView.setAdapter(adapter);
-
 
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -67,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
                     }
 
                     @Override
